@@ -21,7 +21,14 @@
 }
 - (void)pluginInitialize
 {
-  NSArray *countryCodes = [NSLocale ISOCountryCodes];
+  NSArray *countryCodes;
+  if (@available(iOS 17.0, *)) {
+    // Use regionCode for iOS 17 and above
+    countryCodes = [[NSLocale currentLocale] regionCode] ? @[ [[NSLocale currentLocale] regionCode] ] : [NSLocale ISOCountryCodes];
+  } else {
+    // Use ISOCountryCodes for versions below iOS 17
+    countryCodes = [NSLocale ISOCountryCodes];
+  }
   NSMutableArray *countries = [NSMutableArray arrayWithCapacity:[countryCodes count]];
   NSString *currentLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
 
